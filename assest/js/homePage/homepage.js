@@ -12,7 +12,7 @@ async function getAllUser() {
     if (data) return data
 
 }
-async function DeleteUser(userId) {
+async function deleteUserFetch(userId) {
 
     const { error } = await supabaseConfig
         .from('users')
@@ -33,7 +33,7 @@ async function showAllUsers() {
     const usersWrapper = document.createElement('div')
     const fragmentUser = document.createDocumentFragment()
     usersWrapper.setAttribute('id', 'wrap-users')
-    usersWrapper.innerHTML = ''
+    usersContainer.innerHTML = ''
     allUser.forEach(user => {
         usersWrapper.insertAdjacentHTML('beforeend', `
             <div class="user">
@@ -60,6 +60,7 @@ async function showAllUsers() {
         btnGroup.addEventListener('click', deleteEditFunc)
     })
 }
+
 
 
 function deleteEditFunc(event) {
@@ -91,15 +92,19 @@ function acceptRejectDel(event){
     }
 }
 
-function deleteUser(userId){
-    const resultFetch=  DeleteUser(userId)
+async function deleteUser(userId){
+    const resultFetch= await  deleteUserFetch(userId)
+
     if(resultFetch){
         showAllUsers()
+        unvisibleModal('delete-modal')
     }
 }
 
-function loadPage() {
-    showAllUsers()
+async function loadPage() {
+    const allUser = await getAllUser()
+
+    showAllUsers(allUser)
 }
 
 

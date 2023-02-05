@@ -131,6 +131,7 @@ body {
     visibility: hidden;
     opacity: 0;
     transition: .4s;
+    z-index: 2;
 }
 .visible {
     visibility: visible;
