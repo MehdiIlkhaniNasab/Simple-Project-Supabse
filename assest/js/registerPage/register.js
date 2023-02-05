@@ -1,5 +1,6 @@
 import supabaseConfig from "../../confing/supabaseConfig.js";
 const submitRegister = document.querySelector('.login-form button')
+
 function getInfoNewUser() {
 
     const inputFirstname = document.querySelector('.firstname')
