@@ -1,5 +1,6 @@
 import supabaseConfig from "../../confing/supabaseConfig.js";
 const btnGroups = document.querySelector('.btn-groups')
+const updateInfoBtn = document.querySelector('.edit-user-form .accept-btn')
 let userId = null;
 // Fetch Get All User
 async function getAllUser() {
@@ -17,11 +18,11 @@ async function deleteUserFetch(userId) {
     const { error } = await supabaseConfig
         .from('users')
         .delete()
-        .eq('id',userId)
+        .eq('id', userId)
 
     if (error) {
         return false
-    }else{
+    } else {
         return true
     }
 
@@ -61,6 +62,32 @@ async function showAllUsers() {
     })
 }
 
+async function getInfoSingleUser(userId) {
+    const { data, error } = await supabaseConfig
+        .from('users')
+        .select()
+        .eq('id', userId)
+
+    if (error) return false
+    if (data.length > 0) {
+        return data
+    } else {
+        return false
+    }
+}
+
+async function updateNewInfo(newInfo, userId) {
+    const { error } = await supabaseConfig
+        .from('users')
+        .update(newInfo)
+        .eq('id', userId)
+
+    if (error) {
+        return false
+    } else {
+        return true
+    }
+}
 
 
 function deleteEditFunc(event) {
@@ -76,26 +103,44 @@ function deleteEditFunc(event) {
 function visiblaModal(idModal) {
     const modal = document.querySelector(`#${idModal}`)
     modal.classList.add('visible')
+
+    if (idModal == 'edit-modal') {
+        showOldInfo(userId)
+    }
 }
 
-function unvisibleModal(idModal){
+async function showOldInfo(userId) {
+    const targetUser = await getInfoSingleUser(userId)
+    const firstname = document.querySelector('.firstname')
+    const lastname = document.querySelector('.lastname')
+    const age = document.querySelector('.age')
+    const password = document.querySelector('.password')
+
+    firstname.value = targetUser[0].firstname
+    lastname.value = targetUser[0].lastname
+    age.value = targetUser[0].age
+    password.value = targetUser[0].password
+
+}
+
+function unvisibleModal(idModal) {
     const modal = document.querySelector(`#${idModal}`)
     modal.classList.remove('visible')
 }
 
-function acceptRejectDel(event){
+function acceptRejectDel(event) {
     const targetBtn = event.target
-    if(targetBtn.classList.contains('accept-btn') ){
+    if (targetBtn.classList.contains('accept-btn')) {
         deleteUser(userId)
-    }else if(targetBtn.classList.contains('unaccept-btn')){
+    } else if (targetBtn.classList.contains('unaccept-btn')) {
         unvisibleModal('delete-modal')
     }
 }
 
-async function deleteUser(userId){
-    const resultFetch= await  deleteUserFetch(userId)
+async function deleteUser(userId) {
+    const resultFetch = await deleteUserFetch(userId)
 
-    if(resultFetch){
+    if (resultFetch) {
         showAllUsers()
         unvisibleModal('delete-modal')
     }
@@ -107,6 +152,59 @@ async function loadPage() {
     showAllUsers(allUser)
 }
 
+function getNewInfoEdit() {
+    const firstname = document.querySelector('.firstname')
+    const lastname = document.querySelector('.lastname')
+    const age = document.querySelector('.age')
+    const password = document.querySelector('.password')
+    const firstnameValue = firstname.value
+    const lastnameValue = lastname.value
+    const ageValue = age.value
+    const passwordValue = password.value
+
+    const formEdit = document.querySelector('.edit-user-form:invalid')
+
+    if (formEdit) {
+        return false
+    } else {
+        let infoNewUser = {
+            firstname: firstnameValue,
+            lastname: lastnameValue,
+            password: passwordValue,
+            age: ageValue
+        }
+
+        return infoNewUser
+    }
+
+}
+
+async function updateUserInfo(event) {
+    event.preventDefault()
+    const formEdit = document.querySelector('.edit-user-form:invalid')
+    const formEditReset = document.querySelector('.edit-user-form')
+    const newInfoUser = getNewInfoEdit()
+    if (newInfoUser) {
+        const resultUpdateFetch = await updateNewInfo(newInfoUser, userId)
+        console.log(resultUpdateFetch);
+        if (resultUpdateFetch) {
+            alert('Successfuly, Your Regsaiter Is Done')
+            resetForm(formEditReset)
+            unvisibleModal('edit-modal')
+            showAllUsers()
+        } else {
+            alert('Please Fill All Inputs')
+        }
+    } else {
+        alert('Please Fill All Inputs')
+    }
+}
+
+
+function resetForm(form) {
+    form.reset()
+}
 
 window.addEventListener('load', loadPage)
 btnGroups.addEventListener('click', acceptRejectDel)
+updateInfoBtn.addEventListener('click', updateUserInfo)

@@ -37,18 +37,22 @@
       <form action="" class="edit-user-form" >
         <div class="input-field">
           <span><i class="bi bi-cursor-text"></i></span>
-          <input type="text" class="firstname" id="" name="" placeholder="Your firstname" spellcheck="false">
+          <input type="text" class="firstname" id="" name="" placeholder="Your firstname" pattern="\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+" required spellcheck="false">
         </div>
         <div class="input-field">
           <span><i class="bi bi-cursor-text"></i></span>
-          <input type="text" class="lastname" id="" name="" placeholder="Your lastname" spellcheck="false">
+          <input type="text" class="lastname" id="" name="" placeholder="Your lastname" pattern="\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+" required spellcheck="false">
+        </div>
+        <div class="input-field">
+          <span><i class="bi bi-cursor-text"></i></span>
+          <input type="number" class="age" id="" name="" placeholder="Your Age" pattern="[1-9]+" required spellcheck="false">
         </div>
         <div class="input-field">
           <span><i class="bi bi-lock"></i></span>
-          <input type="password" class="password" id="" name="" placeholder="your password" spellcheck="false">
+          <input type="password" class="password" id="" name="" placeholder="your password" spellcheck="false" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$" required>
         </div>
 
-        <button class="accept-btn" >update information</button>
+        <button  class="accept-btn" >update information</button>
       </form>
     </div>
   </div>

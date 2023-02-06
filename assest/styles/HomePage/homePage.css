@@ -197,9 +197,17 @@ body {
     padding: 10px ;
 }
 .input-field input {
-    border: none;
+    border: 1px solid transparent;
     outline: none;
     width: 100%;
     font-size: 1.1rem;
     padding-right: 15px;
+}
+.input-field input:invalid {
+    border: 1px solid #ff0000;
+    border-left: none;
+}
+.input-field input:valid {
+    border: 1px solid #15ff00;
+    border-left: none;
 }
